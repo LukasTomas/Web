@@ -1,0 +1,100 @@
+<form action="/objednavka/expedice/" method="POST">
+    <h1 class="lead">
+        Expedice
+    </h1>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="ceskaPostaDoRukyId" checked>
+        <label class="form-check-label" for="ceskaPostaDoRukyId">
+            Česká pošta - Do ruky
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="ceskaPostaId"
+            data-bs-toggle="modal"  data-bs-target="#exampleModal">
+        <label class="form-check-label" for="ceskaPostaId">
+            Česká pošta - Na poštu
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="zasilkovnaId">
+        <label class="form-check-label" for="zasilkovnaId">
+            Zásilkovna
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Pokračovat k Platbě</button>               
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <h2 class="text-center">Česká pošta</h2>
+            <p class="text-center lead" style="font-weight: normal;">
+                Zadejte PSČ obce, kde si chcete zásilku vyzvednout.
+            </p>
+            <div class="modal-body">
+                <div class="form-floating">
+                    <input type="text" id="pscId" name="psc" placeholder="PSČ" class="form-control" />
+                    <label for="pscId">PSČ</label>
+
+                    <div id="searchRes"></div>
+                    <script type="text/javascript">
+                        $('#pscId').on("input", function() {
+                            let text = $(this).val();
+                            let infoDiv = '#searchRes'; 
+                            if ( text.length < 3 ) {
+                                $(infoDiv).text("Zadejte alespoň 3 znaky");
+                                $(infoDiv).addClass("text-danger");
+                            } else {
+                                $(infoDiv).text('');
+                                if ( $(infoDiv).hasClass('text-danger') )
+                                    $(infoDiv).removeClass('text-danger');
+                                $.ajax({
+                                    url: '/objednavka/dodaci-udaje/psc',
+                                    method: 'POST',
+                                    data: {data: text},
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        if ( data.success ) {
+                                            for ( let i = 0; i < data.result.length; i++ ) {
+                                                console.log(data.result[i].name);
+                                                let p = $("<div></div>").text(
+                                                    data.result[i].name + ", " + data.result[i].psc);
+                                                $(infoDiv).append(p);
+                                            }
+                                        } else {
+                                            $(infoDiv).addClass("text-danger");
+                                            $(infoDiv).text("žádný výsledek");
+                                        }
+                                    }
+                                });
+                            }
+                        })
+                    </script>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+Vybraná pobočka:
+  <input type="hidden" id="packeta-point-id" class="packeta-selector-branch-id">
+  <span id="packeta-point-info" class="packeta-selector-branch-name">Žádná</span>
+<script type="text/javascript">
+    window.currentId = "breadcrumb-expedition";
+
+    var packetaSelectorOpen = '#zasilkovnaId';
+    var packetaSelectorBranchName = '.packeta-selector-branch-name';
+    var packetaSelectorBranchId = '.packeta-selector-branch-id';
+    var packetaCountry = 'cz';
+    var packetaWidgetLanguage = 'cs';
+    var packetaPrimaryButtonColor = '#39b54a';
+    var packetaBackgroundColor = '#ffffff';
+    var packetaFontColor = '#555555';
+    var packetaFontFamily = 'Arial';
+</script>
+<script src="https://widget.packeta.com/v6/www/js/packetaWidget.js" ></script>
+
+

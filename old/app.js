@@ -1,0 +1,110 @@
+const express = require('express');
+const expressLayouts = require('express-ejs-layouts');
+
+const app = express();
+const path = require('path');
+const mongoose = require('mongoose');
+const session = require('express-session')
+const MongoStore = require('connect-mongo');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+
+const Pen = require('./models/pen');
+const Cart = require('./models/cart');
+
+const dbURI = 'mongodb+srv://lukas:lukas@cluster0.uzxq2yb.mongodb.net/?retryWrites=true&w=majority'
+//const dbURI = 'mongodb+srv://lukas:lukas@cluster0.h8rbi.mongodb.net/database?retryWrites=true&w=majority';
+mongoose.connect(dbURI, {useNewUrlParser: true})
+    .then(() => console.log('database connected'))
+    .catch(err => console.log(err));
+
+//EJS
+app.use(expressLayouts);
+app.set('view engine', 'ejs');
+
+app.use(cookieParser());
+//session
+app.use(session({
+    secret: 'happy teddy',
+    saveUninitialized: true,
+    resave: false,
+    store: MongoStore.create({mongoUrl: dbURI}),
+    cookie: { maxAge: 180 * 60 * 1000 }
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
+app.get('/', (req, res) => {
+    res.render("home.ejs");
+});
+
+app.get('/e-shop', (req, res) => {
+    Pen.find().then((result) => {
+        res.render('e-shop.ejs', { pens: result });
+    }).catch((err) => {
+        console.log(err);
+    });
+    //res.render("e-shop.ejs");
+});
+
+app.use(bodyParser.urlencoded({extended:false}));
+app.put('/add-to-cart/:id', (req, res) => {
+    let penId = req.params.id;
+    let quantity = parseInt(req.body.quantity);
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+
+    if ( quantity <= 0 )
+        res.status(400).json({message: "Neplatný počet produktu:" + quantity});
+    else {
+        
+        let cart = new Cart(req.session.cart ? req.session.cart : {pens: {}});
+        
+        Pen.findById(penId, (err, pen) => {
+            if ( err )
+            console.log(err);
+        
+        if (cart.doesContain(pen.id)) {
+            new_pen_quantity = cart.pens[pen.id].qty + quantity
+            
+            if ( new_pen_quantity > pen.quantity )
+                return res.status(400).json({ message: "Maximální počet produktu" });
+        }        
+
+        for ( let i = 0; i < quantity; i++ )
+            cart.add(pen, pen.id);
+        req.session.cart = cart;
+        res.json({msg: 'ok'});
+    });
+    }
+});
+
+
+app.get('/pen/:id', (req, res) => {
+    let penId = req.params.id;
+    
+    Pen.findById(penId, (err, pen) => {
+        if ( err )
+            console.log(err);
+        res.render("pen-site.ejs", {pen: pen});
+    });
+});
+
+
+//css and pictures
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.use('/', require('./routes/shopping-cart-router.js'));
+app.use('/', require('./routes/admin.js'));
+app.use('/', require('./routes/order.js'));
+
+//404
+app.use((req, res) => {
+    res.status(404).render("404.ejs");
+});
+
+//start
+let port = process.env.PORT || 1111;
+app.listen(port, console.log("running..."));

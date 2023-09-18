@@ -1,0 +1,42 @@
+<div class="container h-100">
+    <div class="row">
+        <div class="col-md-6 m-auto">
+            <div class="card card-body pb-2">
+                <h1 class="text-center">
+                    <span style="color: Mediumslateblue; font-size: 0.9em;"><i class="fa fa-sign-in" aria-hidden="true"></i></span> 
+                Account Login</h1>
+            <!---    <% if (typeof flash != 'undefined' && flash.length>0) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%= flash %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>     
+                <% } %>    -->           
+                <% if ( (typeof error != 'undefined' && error.length > 0)) {%>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <%= error %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <% } %>
+                <form action="/admin/login" method="POST">
+                    <div class="form-group">
+                        <label class="regLabel" for="nameId">Jméno</label>
+                        <input type="name" id="nameId" name="name" placeholder="jmeno" class="form-control"
+                        value="<%= typeof name != 'undefined' ? name : '' %>" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="regLabel" for="passwordId">Heslo</label>
+                        <input type="password" id="passwordId" name="password" class="form-control" placeholder="Enter Password"
+                        value="<%= typeof password != 'undefined' ? password : '' %>" />
+                    </div>
+                
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>               
+                </form>
+            </div>
+        </div>
+    </div>    
+</div>

@@ -1,0 +1,88 @@
+<p class="text-danger error"></p>
+<h2 class="border-bottom pb-2">
+    <span class="lead" style="font-size:2vw">
+        Aktuální objednávky
+    </span>
+</h2>
+<div class="container-fluid">
+    <% if ( orders && orders.length > 0) { %>
+    <%      orders.forEach( order => { %>
+        <div class="row border border-info m-2 p-1 border-radius rounded">
+           <div class="col-sm-12 col-md-9">
+               <h5>Celková cena objednávky: <%= order.totalPrice %></h53>
+               <% order.pens.forEach( pen => { %>
+                   <div>
+                       <span class="lead"><%= pen.name %></span>
+                       : <em><%= pen.qty %>x</em>
+                   </div>
+               <% }) %>
+           </div>
+            <div class="col-sm-12 col-md-3 p-0">
+                <button id="<%= order._id %>" type="button" class="order-done btn btn-info float-right"><span class="lead">HOTOVO</span></button>
+            </div>
+        </div>
+    <%        }); %>
+    <% } else { %>
+    <p class="lead">Žádné objednávky</p>
+    <% } %>
+</div>
+
+<div id="finished-orders-parent" style="cursor: pointer">
+    <h2 class="border-bottom pb-2">
+        <span class="lead" style="font-size:2vw">
+            Hotové objednávky
+        </span>
+    </h2>
+    <div class="container-fluid" id="finished-orders">
+        <% if ( finishedOrders && finishedOrders.length > 0) { %>
+        <%      finishedOrders.forEach( finishedOrder => { %>
+            <div class="row border border-success m-2 p-1 border-radius rounded">
+               <div class="col-sm-12 col-md-9">
+                   <h5>Celková cena objednávky: <%= finishedOrder.totalPrice %></h53>
+                   <% finishedOrder.pens.forEach( pen => { %>
+                       <div>
+                           <span class="lead"><%= pen.name %></span>
+                           : <em><%= pen.qty %>x</em>
+                       </div>
+                   <% }) %>
+               </div>
+            </div>
+        <%        }); %>
+        <% } else { %>
+        <p class="lead">Žádné objednávky</p>
+        <% } %>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let isFaded = false;
+    $('.order-done').one('click', function() {
+        let id = $(this).attr('id');
+        $.ajax({
+            url: '/admin/order-done/'+id,
+            method: 'DELETE',
+            dataType: 'json',
+            success: function(result) {
+                if ( !result.success ) {
+                    $('.error').text(result.errorStr);
+                }
+                location.reload();
+            }
+        });
+    });
+
+    $('#finished-orders-parent').on('click', function() {
+       if ( isFaded ) {
+           console.log('bro');
+            $('#finished-orders').fadeIn(500, function() {
+                $(this).css("display", "block");
+            });
+            isFaded = false;
+       } else {
+            $('#finished-orders').fadeOut(500, function() {
+                $(this).css("display", "none");
+            });
+            isFaded = true;
+        }
+    });
+</script>

@@ -1,0 +1,31 @@
+<div class="container-fluid menuContainer">
+    <nav class="navbar navbar-expand-sm navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul id="#menunav" class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="colorMe" id='home' href="/">Home</a></li>
+                <li class="nav-item"><a class="colorMe" id='e-shop' href="/e-shop">E-shop</a></li>
+            </ul>
+        </div>
+        
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a id="shopping-cart" class="colorMe" href='/shopping-cart'>
+                    Košík
+                    <img src="/shopping-cart.png">
+                </a>
+                <span class="badge">
+                    <% if ( session.cart ) { %>
+                    <span id="nav-cart-price"><%= session.cart.totalPrice %></span>
+                    <% } else { %>
+                        <span id="nav-cart-price">0</span>
+                    <% } %>
+                </span>
+            </li>
+        </ul>
+    </nav>
+
+</div>

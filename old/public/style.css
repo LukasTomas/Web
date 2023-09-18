@@ -1,0 +1,50 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+.nav-item {
+    font-size: 1.6em;
+    font-weight: 300;
+    margin-right: 35px;
+}
+
+.nav-item a:hover {
+    text-decoration: none;
+}
+
+.colorMe {
+    color: #d5e9fa; /* #fcfdff vice svetle*/
+}
+
+.active {
+    font-weight: 400;
+    color: white;
+}
+
+.menuContainer {
+    padding: 13px 20px;
+    padding-left: 100px;
+    background-color:#1e88e5;
+}
+
+#shopping-cart {
+    padding: 3px;
+}
+
+
+#shopping-cart-part {
+    border: 1px solid transparent;
+    border-left: 1px solid #e1e1e1;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+#shopping-cart-part > #totalPrice {
+    border-top: 1px solid #e1e1e1;
+}
+
+#shopping-cart-part > .name {
+    border-bottom: 1px solid #e1e1e1;
+}

@@ -1,0 +1,81 @@
+<form action="/objednavka/dodaci-udaje/" method="POST" class="needs-validation" novalidate>
+    <h1 class="lead">
+        Kontaktní údaje
+    </h1>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="col-md form-floating mb-3">
+                <input type="name" id="nameId" name="name" placeholder="Jméno" style="font-size: .875em;" class="form-control"
+                    autocomplete="given-name" required />
+                <label for="nameId" style="font-size: .875em;">Jméno</label>
+            </div>    
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <input type="surname" id="surnameId" name="surname" placeholder="Příjmení" class="form-control"
+                    autocomplete="family-name" required />
+                <label for="surnameId">Příjmení</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="email" id="emailId" name="email" placeholder="E-mail" class=" input-sm form-control"
+            required />
+        <label for="emailId">E-mail</label>
+    </div>
+    <div class="form-floating">
+        <input type="text" id="phoneId" name="phone" placeholder="Telefon (volitelné)" class="form-control"
+            autocomplete="tel" />
+        <label for="phoneId">Telefon (volitelné)</label>
+    </div>    
+
+    <h1 class="lead mt-2">
+        Fakturační údaje
+    </h1>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <input type="text" id="cityId" name="phone" placeholder="Město" class="form-control"
+                    autocomplete="address-level2" required />
+                <label for="cityId">Město</label>
+            </div> 
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <input type="text" id="phoneId" name="phone" placeholder="PSČ" class="form-control"
+                    autocomplete="postal-code" required />
+                <label for="phoneId">PSČ</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <input type="text" id="streetId" name="email" placeholder="Ulice a č. p." class="form-control"
+            required autocomplete="address-line1" />
+        <label for="streetId">Ulice a č. p.</label>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Pokračovat k Expedici</button>               
+</form>
+
+<script type="text/javascript">
+    window.currentId = "breadcrumb-info";
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+            })
+    })()
+</script>

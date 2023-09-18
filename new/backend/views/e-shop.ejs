@@ -1,0 +1,20 @@
+<h2 class="display-4">Pens</h2>
+<div class="container-fluid">
+    <% if (pens.length > 0) { %>
+    <%      pens.forEach( pen => { %>
+                <div class='border m-1'>
+                    <p class="lead">
+                        <%= pen.title %>
+                        <br />quantity: <%= pen.quantity %>
+                        <br />price: <%= pen.price %>
+                    </p>
+
+                    <div class="border m-1">
+                        <a href="/pen/<%= pen._id %>" class="btn btn-success" role="button">go to pen</a>
+                    </div>
+                 </div>
+    <%        }); %>
+    <% } else { %>
+    <p class="lead">Žádné nabídky</p>
+    <% } %>
+</div>

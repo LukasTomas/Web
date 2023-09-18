@@ -1,0 +1,99 @@
+
+<div class="display-4" style="border-bottom: 2px solid rebeccapurple;"><%= pen.title %></div>
+<div >quantity: <%= pen.quantity %></div>
+<div>price: <span id="pen-price"><%= pen.price %></span></div>
+<div class="row">
+    <div class="row">
+        <div class="col border">
+          <span id="quantity">1</span>
+        </div>
+        <div class="col border">
+            <span style="float: left; line-height: 0%">
+                <i class="fa-solid fa-angle-up m-0" style="cursor: pointer; color: grey"></i>
+            </span>
+            <span style="float: left; clear:  left; line-height: 0%">
+                <i class="fa-solid fa-angle-down m-0" style="cursor: pointer; color: grey"></i>
+            </span>
+        </div>
+        <div id="<%= pen._id %>" class="col border add-to-cart" style="cursor: pointer;">
+            <strong>
+                Add to cart
+            </strong>
+        </div>
+      </div>
+</div>
+
+<div class="alert alert-danger alert-dismissible fade show" id="errorAlert" role="alert" style="display: none;">
+    <span id="errorMessage"></span>
+    <button type="button" class="close alert-close-button" aria-label="Close">
+        <span aria-hidden="false">&times;</span>
+    </button>
+</div>
+
+<script type="text/javascript">
+    max_pen_quantity = <%= pen.quantity %>
+
+    $('.alert-close-button').on("click", function() {
+        $(this).parent().hide()
+    });
+
+
+    $('.fa-angle-up').click(function() {
+        let quantity = parseInt($('#quantity').text());
+
+        if ( quantity < max_pen_quantity )
+            $('#quantity').text(quantity+1);
+    });
+
+    $('.fa-angle-down').click(function() {
+        let quantity = parseInt($('#quantity').text());
+        if ( quantity > 0 )
+            $('#quantity').text(quantity-1);
+    });
+
+    $('.add-to-cart').click(function() {
+        let id = $(this).attr('id');
+        let qty = parseInt($('#quantity').text());
+        
+        if ( qty > 0 ) {
+            $.ajax({
+                url: '/add-to-cart/'+id,
+                method: 'PUT',
+                data: {quantity: qty},
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result)
+                    let increaseBy = qty * parseInt( $('#pen-price').text() );
+                    let currentTotalPrice = parseInt( $('#nav-cart-price').text() );
+
+                    $('#nav-cart-price').text(increaseBy + currentTotalPrice);
+                },
+                error: function (error) {
+                    errorMsg = error.responseJSON['message']
+                    console.log(errorMsg)
+
+                    $("#errorMessage").text(errorMsg)
+                    $(".alert").show()
+                }
+            });
+        }
+    });
+
+    $('.fa-angle-up').hover(function() {
+        $(this).css('color', '#7FFFD4');
+    }, function() {
+        $(this).css('color', 'grey');
+    })
+        
+    $('.fa-angle-down').hover(function() {
+        $(this).css('color', 'red');
+    }, function() {
+        $(this).css('color', 'grey');
+    })
+        
+    $('#add-to-cart').hover(function() {
+        $(this).css('color', 'green');
+    }, function() {
+        $(this).css('color', 'grey');
+    })
+</script>
